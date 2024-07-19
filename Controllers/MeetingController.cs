@@ -1,16 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MeetingApp.Models;
 
 namespace MeetingApp.Controllers
 {
     public class MeetingController : Controller
     {
-
-        [HttpGet]
-        public IActionResult Index()
-        {
-            return View();
-        }
-
         [HttpGet]
         public IActionResult Apply()
         {
@@ -18,13 +12,18 @@ namespace MeetingApp.Controllers
         }
 
 		[HttpPost]
-		public IActionResult Apply(string Name,string Phone,string Email,bool WillAttend)
+		public IActionResult Apply(UserInfo model)
 		{
             //Conrtolled
             //Console.WriteLine(Name,Phone,Email,WillAttend);
 
+            //Database kaydı yapılabilir.
 
-			return View();
+            Repository.AddUser(model);
+
+            ViewBag.UserCount = Repository.Users.Where(info => info.WillAttend == true).Count();
+
+			return View("Thanks",model);
 		}
 
 		[HttpGet]
