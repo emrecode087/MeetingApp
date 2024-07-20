@@ -14,16 +14,16 @@ namespace MeetingApp.Controllers
 		[HttpPost]
 		public IActionResult Apply(UserInfo model)
 		{
-            //Conrtolled
-            //Console.WriteLine(Name,Phone,Email,WillAttend);
-
-            //Database kaydı yapılabilir.
-
-            Repository.AddUser(model);
-
-            ViewBag.UserCount = Repository.Users.Where(info => info.WillAttend == true).Count();
-
-			return View("Thanks",model);
+            if (ModelState.IsValid)
+            {
+                Repository.AddUser(model);
+                ViewBag.UserCount = Repository.Users.Where(info => info.WillAttend == true).Count();
+                return View("Thanks", model);
+            }
+            else
+			{
+				return View(model);
+			}
 		}
 
 		[HttpGet]
@@ -32,5 +32,13 @@ namespace MeetingApp.Controllers
             var users = Repository.Users;
             return View(users);
         }
+
+        // /Meeting/Details/1
+        [HttpGet]
+        public IActionResult Details(int id)
+		{
+			var user = Repository.GetById(id);
+			return View(user);
+		}
     }
 }
